@@ -1,4 +1,5 @@
 #include "Copter.h"
+//#include <GCS_MAVLink/GCS.h>
 
 // Code to detect a crash main ArduCopter code
 #define LAND_CHECK_ANGLE_ERROR_DEG  30.0f       // maximum angle error to be considered landing
@@ -19,6 +20,13 @@ void Copter::update_land_and_crash_detectors()
     land_accel_ef_filter.apply(accel_ef, scheduler.get_loop_period_s());
 
     update_land_detector();
+
+    static uint16_t mucounter = 0;
+    mucounter++;
+    if (mucounter > 800) {
+        mucounter = 0;
+        gcs().send_text(MAV_SEVERITY_CRITICAL, "hello world! %5.3f", (double)6.1);
+    }
 
 #if PARACHUTE == ENABLED
     // check parachute
